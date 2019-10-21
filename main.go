@@ -13,7 +13,8 @@ import (
 )
 
 // func makePlanets()
-func validate(answer rune) rune {
+
+func validateYorN(answer rune) rune {
 	runeReader := bufio.NewReader(os.Stdin)
 	if answer == 'N' || answer == 'Y'{
 		return answer
@@ -21,7 +22,20 @@ func validate(answer rune) rune {
 	fmt.Println("Sorry, I didn't get that.")
 	fmt.Println("Shall I randomly choose a planet for you to visit? (Y or N)")
 	answer, _, _ = runeReader.ReadRune()
-	return validate(unicode.ToUpper(answer))
+	return validateYorN(unicode.ToUpper(answer))
+}
+
+func validatePlanet(answer string, keys []string) string {
+	stringReader := bufio.NewReader(os.Stdin)
+	for i:=0; i<len(keys); i++{
+		if answer == keys[i]{
+			return answer
+		}
+	}
+	fmt.Println("Sorry, that planet doesn't exist.")
+	fmt.Println("Name the planet you would like to visit.")
+	choice, _ := stringReader.ReadString('\n')
+	return validatePlanet(strings.TrimSuffix(choice, "\n"), keys)
 }
 
 func main() {
@@ -65,12 +79,12 @@ func main() {
 
 	//validate user input
 	upAnswer := unicode.ToUpper(answer)
-	valAnswer := validate(upAnswer)
+	valAnswer := validateYorN(upAnswer)
 
 	if valAnswer == 'N'{
 		fmt.Println("Name the planet you would like to visit.")
 		choice, _ := stringReader.ReadString('\n')
-		planet := strings.TrimSuffix(choice, "\n")
+		planet := validatePlanet(strings.TrimSuffix(choice, "\n"), keys)
 		fmt.Printf("Traveling to %v...\n", planet)
 		fmt.Printf("Arrived at %v! %v\n", planet, planets[planet])
 	} else {
