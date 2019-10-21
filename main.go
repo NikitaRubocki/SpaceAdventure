@@ -13,7 +13,16 @@ import (
 )
 
 // func makePlanets()
-
+func validate(answer rune) rune {
+	runeReader := bufio.NewReader(os.Stdin)
+	if answer == 'N' || answer == 'Y'{
+		return answer
+	}
+	fmt.Println("Sorry, I didn't get that.")
+	fmt.Println("Shall I randomly choose a planet for you to visit? (Y or N)")
+	answer, _, _ = runeReader.ReadRune()
+	return validate(unicode.ToUpper(answer))
+}
 
 func main() {
 	// variable declarations
@@ -39,16 +48,26 @@ func main() {
         keys = append(keys, k)
 	}
 
+	// introduction
 	fmt.Printf("Welcome to the %v!\n", name)
 	fmt.Printf("There are %v planets to explore.\n", len(planets))
+
+	// get username and print
 	fmt.Println("What is your name?")
 	input, _ := stringReader.ReadString('\n')
 	userName := strings.TrimSuffix(input, "\n")
 	fmt.Println("Nice to meet you, "+userName+". My name is Eliza, I'm an old friend of Alexa.")
+
+	// the adventure begins
 	fmt.Println("Let's go on an adventure!")
 	fmt.Println("Shall I randomly choose a planet for you to visit? (Y or N)")
 	answer, _, _ := runeReader.ReadRune()
-	if unicode.ToUpper(answer) == 'N'{
+
+	//validate user input
+	upAnswer := unicode.ToUpper(answer)
+	valAnswer := validate(upAnswer)
+
+	if valAnswer == 'N'{
 		fmt.Println("Name the planet you would like to visit.")
 		choice, _ := stringReader.ReadString('\n')
 		planet := strings.TrimSuffix(choice, "\n")
