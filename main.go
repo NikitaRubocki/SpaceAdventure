@@ -82,14 +82,14 @@ func main() {
 	fmt.Println("What is your name?")
 	input, _ := reader.ReadString('\n')
 	userName := strings.TrimSuffix(input, "\n")
-	fmt.Println("Nice to meet you, " + userName + ". My name is Eliza, I'm an old friend of Alexa.")
+	fmt.Printf("Nice to meet you, %v. My name is Eliza, I'm an old friend of Alexa.", userName)
 
 	// the adventure begins
 	fmt.Println("Let's go on an adventure!")
 	fmt.Println("Shall I randomly choose a planet for you to visit? (Y or N)")
 	answer, _ := reader.ReadString('\n')
 
-	//validate user input and choose a planet
+	// validate user input and choose a planet
 	valAnswer := validateInput(strings.ToUpper(strings.TrimSuffix(answer, "\n")), reader)
 	choosePlanet(valAnswer, solarSystem, reader, r1)
 
