@@ -8,11 +8,29 @@ import (
 	"math/rand"
 	"time"
 	"unicode"
-	// "io/ioutil"
-	// "encoding/json"
+	"io/ioutil"
+	"encoding/json"
 )
 
-// func makePlanets()
+// Planet name and description
+type Planet struct {
+	Name string 		`json:"name"`
+	Description string	`json:"description"`
+}
+
+// System name and arrays of Planets
+type System struct {
+	Name string 		`json:"name"`
+	Planets []Planet	`json:"planets"`
+}
+
+func makeSolarSystem(file string) System {
+	jsonFile, _ := os.Open(file)
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	var solarSystem System
+	json.Unmarshal(byteValue, &solarSystem)
+	return solarSystem
+}
 
 func validateYorN(answer rune) rune {
 	runeReader := bufio.NewReader(os.Stdin)
@@ -45,26 +63,42 @@ func main() {
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
 
-	var name = "Solar System"
-	planets := map[string]string{
-		"Mercury": "A very hot planet, closest to the sun.",
-		"Venus": "It's very cloudy here!",
-		"Earth": "There is something very familiar about this planet.",
-		"Mars": "Known as the red planet.",
-		"Jupiter": "A gas giant, with a noticeable red spot.", 
-		"Saturn": "This planet has beautiful rings around it.",
-		"Uranus": "Strangely, this planet rotates around on its side.",
-		"Neptune": "A very cold planet, furthest from the sun.",
-		"Pluto": "I don't care what they say - it's a planet.",
-	}
-    keys := make([]string, 0, len(planets))
-    for k := range planets {
-        keys = append(keys, k)
-	}
+	// var name = "Solar System"
+	// planets := map[string]string{
+	// 	"Mercury": "A very hot planet, closest to the sun.",
+	// 	"Venus": "It's very cloudy here!",
+	// 	"Earth": "There is something very familiar about this planet.",
+	// 	"Mars": "Known as the red planet.",
+	// 	"Jupiter": "A gas giant, with a noticeable red spot.", 
+	// 	"Saturn": "This planet has beautiful rings around it.",
+	// 	"Uranus": "Strangely, this planet rotates around on its side.",
+	// 	"Neptune": "A very cold planet, furthest from the sun.",
+	// 	"Pluto": "I don't care what they say - it's a planet.",
+	// }
+    // keys := make([]string, 0, len(planets))
+    // for k := range planets {
+    //     keys = append(keys, k)
+	// }
+
+	// type Planet struct{
+	// 	Name string 		`json:"name"`
+	// 	Description string	`json:"description"`
+	// }
+	// type System struct {
+	// 	Name string 		`json:"name"`
+	// 	Planets []Planet	`json:"planets"`
+	// }
+
+	// working with json file
+	// jsonFile, _ := os.Open("planetarySystem.json")
+	// byteValue, _ := ioutil.ReadAll(jsonFile)
+	// var solarSystem System
+	// json.Unmarshal(byteValue, &solarSystem)
 
 	// introduction
-	fmt.Printf("Welcome to the %v!\n", name)
-	fmt.Printf("There are %v planets to explore.\n", len(planets))
+	solarSystem := makeSolarSystem("planetarySystem.json")
+	fmt.Printf("Welcome to the %v!\n", solarSystem.Name)
+	fmt.Printf("There are %v planets to explore.\n", len(solarSystem.Planets))
 
 	// get username and print
 	fmt.Println("What is your name?")
@@ -82,16 +116,16 @@ func main() {
 	valAnswer := validateYorN(upAnswer)
 
 	if valAnswer == 'N'{
-		fmt.Println("Name the planet you would like to visit.")
-		choice, _ := stringReader.ReadString('\n')
-		planet := validatePlanet(strings.TrimSuffix(choice, "\n"), keys)
-		fmt.Printf("Traveling to %v...\n", planet)
-		fmt.Printf("Arrived at %v! %v\n", planet, planets[planet])
+		// fmt.Println("Name the planet you would like to visit.")
+		// choice, _ := stringReader.ReadString('\n')
+		// planet := validatePlanet(strings.TrimSuffix(choice, "\n"), keys)
+		// fmt.Printf("Traveling to %v...\n", planet)
+		// fmt.Printf("Arrived at %v! %v\n", planet, planets[planet])
+
 	} else {
-		num := r1.Intn(len(planets))
-		planet := keys[num]
-		fmt.Printf("Traveling to %v...\n", planet)
-		fmt.Printf("Arrived at %v! %v\n", planet, planets[planet])
+		num := r1.Intn(len(solarSystem.Planets))
+		fmt.Printf("Traveling to %v...\n", solarSystem.Planets[num].Name)
+		fmt.Printf("Arrived at %v! %v\n", solarSystem.Planets[num].Name, solarSystem.Planets[num].Description)
 	}
 
 }
@@ -99,16 +133,11 @@ func main() {
 // file, _ := ioutil.ReadFile("planetarySystem.json")
 // planets := json.Unmarshal(file, &Space)
 // m := make(map[string]string)
-	// type System struct {
-	// 	Name string
-	// 	Planets []Planet
-	// }
+
 	//var Space map[string]Planet
 	// var Space System
 
-	// type Planet struct{
-	// 	Name, Description string
-	// }
+
 	// planets := []Planet{
 	// 	{"Mercury", "A very hot planet, closest to the sun."},
 	// 	{"Venus", "It's very cloudy here!"},
