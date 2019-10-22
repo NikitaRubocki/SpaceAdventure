@@ -56,6 +56,21 @@ func validatePlanet(answer string, planets []Planet) Planet {
 	return validatePlanet(strings.TrimSuffix(choice, "\n"), planets)
 }
 
+func choosePlanet(input rune, solarSystem System, r *rand.Rand){
+	stringReader := bufio.NewReader(os.Stdin)
+	if input == 'N'{
+		fmt.Println("Name the planet you would like to visit.")
+		choice, _ := stringReader.ReadString('\n')
+		planet := validatePlanet(strings.TrimSuffix(choice, "\n"), solarSystem.Planets)
+		fmt.Printf("Traveling to %v...\n", planet.Name)
+		fmt.Printf("Arrived at %v! %v\n", planet.Name, planet.Description)
+	} else {
+		num := r.Intn(len(solarSystem.Planets))
+		fmt.Printf("Traveling to %v...\n", solarSystem.Planets[num].Name)
+		fmt.Printf("Arrived at %v! %v\n", solarSystem.Planets[num].Name, solarSystem.Planets[num].Description)
+	}
+}
+
 func main() {
 	// variable declarations
 	stringReader := bufio.NewReader(os.Stdin)
@@ -114,18 +129,7 @@ func main() {
 	//validate user input
 	upAnswer := unicode.ToUpper(answer)
 	valAnswer := validateYorN(upAnswer)
-
-	if valAnswer == 'N'{
-		fmt.Println("Name the planet you would like to visit.")
-		choice, _ := stringReader.ReadString('\n')
-		planet := validatePlanet(strings.TrimSuffix(choice, "\n"), solarSystem.Planets)
-		fmt.Printf("Traveling to %v...\n", planet.Name)
-		fmt.Printf("Arrived at %v! %v\n", planet.Name, planet.Description)
-	} else {
-		num := r1.Intn(len(solarSystem.Planets))
-		fmt.Printf("Traveling to %v...\n", solarSystem.Planets[num].Name)
-		fmt.Printf("Arrived at %v! %v\n", solarSystem.Planets[num].Name, solarSystem.Planets[num].Description)
-	}
+	choosePlanet(valAnswer, solarSystem, r1)
 
 }
 
